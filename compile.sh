@@ -4,7 +4,7 @@ PROGNAME=mu
 
 DEBUG_FLAGS="-O0 -g3 -ggdb"
 RELEASE_FLAGS="-O3"
-COMMON_FLAGS="-Wall"
+COMMON_FLAGS="-Wall -std=c99 -fstrict-aliasing"
 
 LINK_FLAGS="-lm -ljack"
 
