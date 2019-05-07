@@ -29,16 +29,16 @@ client_initialize()
 
     d->jack_client = jack_client_open(CLIENT_NAME, d->options, &d->status);
     if (d->jack_client == NULL)  {
-        fprintf(stderr, "jack_client_open failed.\n");
-        exit(1);
+        fprintf(stderr, CLIENT_NAME ": jack_client_open() failed\n");
+        return NULL;
     }
 
     d->sr = jack_get_sample_rate(d->jack_client);
     d->buffer_size = jack_get_buffer_size(d->jack_client);
 
     if (jack_set_process_callback(d->jack_client, process_callback, d) != 0) {
-        fprintf(stderr, "jack_set_process_callback() failed");
-        exit(1);
+        fprintf(stderr, CLIENT_NAME ": jack_set_process_callback() failed");
+        return NULL;
     }
 
     jack_on_shutdown(d->jack_client, client_on_shutdown, NULL);
@@ -58,8 +58,8 @@ client_initialize()
                                      JackPortIsOutput, 0);
     if (! (d->inport1 && d->inport2 &&
            d->outport1 && d->outport2)) {
-        fprintf(stderr, "error: cannot register ports.\n");
-        exit(1);
+        fprintf(stderr, CLIENT_NAME ": error: cannot register ports\n");
+        return NULL;
     }
 
     if (signal (SIGINT, client_termination_handler) == SIG_IGN)
@@ -71,8 +71,8 @@ client_initialize()
 
     /* fire! */
     if (jack_activate(d->jack_client) != 0) {
-        fprintf(stderr, "error: jack_activate() failed.\n");
-        exit(1);
+        fprintf(stderr, CLIENT_NAME ": error: jack_activate() failed\n");
+        return NULL;
     }
 
     return d;
