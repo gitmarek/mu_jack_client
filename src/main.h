@@ -3,7 +3,10 @@
 
 #include <jack/jack.h>
 
-/* client interface (client.c) */
+/**
+ * client interface (client.c)
+ *
+ */
 #define CLIENT_NAME "mu"
 #define CLIENT_JACK_OPTIONS JackNullOption
 
@@ -22,7 +25,20 @@ typedef struct {
 client_t* client_initialize(void);
 
 
-/* process interface (process.c) */
-int  process_callback(jack_nframes_t nframes, void *arg);
+/**
+ * proc interface (proc.c)
+ *
+ */
+#define PROC_NUMCHANNELS 4
+
+/* The size of internal buffers does not increase latency.  */
+#define PROC_BUFSIZE 65536 /* per channel */
+
+typedef struct proc proc_t;
+
+proc_t* proc_initialize(client_t *client);
+int proc_deactivate(void);
+int proc_callback(jack_nframes_t nframes, void *arg);
+
 
 #endif /* _MAIN_H_ */
